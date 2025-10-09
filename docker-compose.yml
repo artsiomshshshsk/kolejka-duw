@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: duw-postgres
+    environment:
+      POSTGRES_DB: duw_queue
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - duw-network
+    restart: unless-stopped
+
+  duw-monitor:
+    build: .
+    container_name: duw-monitor
+    environment:
+      # Database configuration
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: duw_queue
+      
+      # Working hours configuration (24-hour format, Europe/Warsaw timezone)
+      WORK_START_HOUR: ${WORK_START_HOUR:-8}
+      WORK_END_HOUR: ${WORK_END_HOUR:-18}
+      
+      # Proxy configuration (set these in .env file)
+      PROXY_USERNAME: ${PROXY_USERNAME}
+      PROXY_PASSWORD: ${PROXY_PASSWORD}
+      PROXY_ADDRESS: ${PROXY_ADDRESS}
+      PROXY_PORT: ${PROXY_PORT}
+    depends_on:
+      - postgres
+    networks:
+      - duw-network
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: duw-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - duw-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  duw-network:
+    driver: bridge

@@ -1,0 +1,23 @@
+# Add go.sum file for dependencies
+go.sum
+
+# Environment files
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
