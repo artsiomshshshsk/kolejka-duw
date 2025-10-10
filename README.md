@@ -6,7 +6,7 @@ Go service that monitors DUW queue status via rotating proxies, stores data in P
 
 - 🔄 Proxy rotation (per-request random session)
 - ⏱️ Polling every 10s within working hours (default 08:00–18:00, Europe/Warsaw)
-- 📅 Weekend-only fetching (skips Mon–Fri)
+- 📅 Weekdays-only fetching (skips Sat–Sun)
 - 🗄️ PostgreSQL storage for "odbiór karty" and "Odbiór karty - wieczory"
 - 🔔 Telegram notifications on transitions of `tickets_left`
   - `<= 0 → > 0`: tickets appeared

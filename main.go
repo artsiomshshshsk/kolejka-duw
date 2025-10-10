@@ -222,7 +222,7 @@ func startMonitoring() {
 				if !isWeekend() {
 					go fetchAndSaveData()
 				} else {
-					log.Printf("Weekday (Mon-Fri), skipping fetch")
+					log.Printf("Weekend (Sat-Sun), skipping fetch")
 				}
 			} else {
 				log.Printf("Outside working hours (%02d:00 - %02d:00 Europe/Warsaw), skipping fetch", startHour, endHour)
