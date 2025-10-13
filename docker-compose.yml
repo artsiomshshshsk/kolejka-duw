@@ -33,6 +33,10 @@ services:
       PROXY_PASSWORD: ${PROXY_PASSWORD}
       PROXY_ADDRESS: ${PROXY_ADDRESS}
       PROXY_PORT: ${PROXY_PORT}
+
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+
     depends_on:
       - postgres
     networks:
