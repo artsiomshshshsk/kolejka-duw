@@ -73,6 +73,11 @@ type Operation struct {
 var db *sql.DB
 
 func main() {
+	err := sendTelegramMessage("Starting duw queue monitoring 🫢")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Initialize database connection
 	initDB()
 	defer db.Close()
