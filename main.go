@@ -73,11 +73,6 @@ type Operation struct {
 var db *sql.DB
 
 func main() {
-	err := sendTelegramMessage("Starting duw queue monitoring 🫢")
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// Initialize database connection
 	initDB()
 	defer db.Close()
@@ -342,14 +337,14 @@ func saveOdbiorkartyEvent(item QueueItem, location string) error {
 	if prevTicketsLeft.Valid {
 		// <=0 -> >0 (tickets appeared)
 		if prevTicketsLeft.Int64 <= 0 && item.TicketsLeft > 0 {
-			message := fmt.Sprintf("🎉 Внимание! Появились талоны по услуге \"получение карты\" в %s (очередь %d). Доступно: %d ✅", location, item.ID, item.TicketsLeft)
+			message := fmt.Sprintf("🎉 Внимание! Появились талоны по услуге \"получение карты\" в %s. Доступно: %d ✅", location, item.TicketsLeft)
 			if err := sendTelegramMessage(message); err != nil {
 				log.Printf("failed to send Telegram notification: %v", err)
 			}
 		}
 		// >0 -> <=0 (tickets finished)
 		if prevTicketsLeft.Int64 > 0 && item.TicketsLeft <= 0 {
-			message := fmt.Sprintf("⛔️ Талоны по услуге \"получение карты\" закончились в %s (очередь %d).", location, item.ID)
+			message := fmt.Sprintf("⛔️ Талоны по услуге \"получение карты\" закончились в %s.", location)
 			if err := sendTelegramMessage(message); err != nil {
 				log.Printf("failed to send Telegram notification: %v", err)
 			}
