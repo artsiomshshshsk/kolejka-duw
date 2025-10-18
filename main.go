@@ -335,8 +335,7 @@ func saveOdbiorkartyEvent(item QueueItem, location string) error {
 
 	// Send notifications on state transitions
 	if prevTicketsLeft.Valid {
-		// <=0 -> >0 (tickets appeared)
-		if prevTicketsLeft.Int64 <= 0 && item.TicketsLeft > 0 {
+		if prevTicketsLeft.Int64 < int64(item.TicketsLeft) {
 			message := fmt.Sprintf("🎉 Внимание! Появились талоны по услуге \"получение карты\" в %s. Доступно: %d ✅", location, item.TicketsLeft)
 			if err := sendTelegramMessage(message); err != nil {
 				log.Printf("failed to send Telegram notification: %v", err)
