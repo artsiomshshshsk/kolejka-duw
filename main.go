@@ -264,22 +264,30 @@ func fetchAndSaveData() {
 }
 
 func fetchQueueData() (*QueueData, error) {
-	// Get random proxy URL
-	proxyURL := GetRandomProxyUrl()
-	log.Printf("Using proxy: %s", maskProxyURL(proxyURL))
+	withProxy := getEnvInt("WITH_PROXY", 0)
 
-	// Parse proxy URL
-	proxy, err := url.Parse(proxyURL)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse proxy URL: %v", err)
+	var clientTransport *http.Transport
+
+	if withProxy == 1 {
+
+		proxyURL := GetRandomProxyUrl()
+		log.Printf("Using proxy: %s", maskProxyURL(proxyURL))
+
+		proxy, err := url.Parse(proxyURL)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse proxy URL: %v", err)
+		}
+
+		clientTransport = &http.Transport{
+			Proxy: http.ProxyURL(proxy),
+		}
+	} else {
+		clientTransport = &http.Transport{}
 	}
 
-	// Create HTTP client with proxy
 	client := &http.Client{
-		Transport: &http.Transport{
-			Proxy: http.ProxyURL(proxy),
-		},
-		Timeout: 30 * time.Second,
+		Transport: clientTransport,
+		Timeout:   30 * time.Second,
 	}
 
 	// Make request
